@@ -1,38 +1,26 @@
 import tkinter as tk
 from tkinter import ttk
 import engine
+from engine import Data
 from tkinter import messagebox
 
-def choose_data(event=None):
-    rows = engine.get_data()
-    for i, (country, code, region, keyword) in enumerate(rows):
-        var1.set(rows[i][0])
-        var2.set(rows[i][1])
-        var3.set(rows[i][2])
-        var4.set(rows[i][3])
-    messagebox.showinfo("Choose Data", rows[0])
-
 def views():
-    # Test the GUI
     window = tk.Tk()
     window.geometry("832x624")
     window.title("Project")
 
-    var1 = tk.StringVar()
-    var2 = tk.StringVar()
-    var3 = tk.StringVar()
-    var4 = tk.StringVar()
+    data = Data()
 
     frame1 = tk.Frame(window, height=200, width=500)
 
     label1 = tk.Label(frame1, text="Country Name:")
-    entry1 = tk.Entry(frame1, textvariable=var1)
+    entry1 = tk.Entry(frame1, textvariable=data.var1)
     label2 = tk.Label(frame1, text="Country Code:")
-    entry2 = tk.Entry(frame1, textvariable=var2)
+    entry2 = tk.Entry(frame1, textvariable=data.var2)
     label3 = tk.Label(frame1, text="Region Name:")
-    entry3 = tk.Entry(frame1, textvariable=var3)
+    entry3 = tk.Entry(frame1, textvariable=data.var3)
     label4 = tk.Label(frame1, text="Region Keyword:")
-    entry4 = tk.Entry(frame1, textvariable=var4)
+    entry4 = tk.Entry(frame1, textvariable=data.var4)
 
     button1 = tk.Button(frame1, text="Add", width=5, command=window.destroy)
     button2 = tk.Button(frame1, text="Update", width=5, command=window.destroy)
@@ -42,11 +30,21 @@ def views():
     table = ttk.Treeview(window, columns=cols, show='headings')
     for col in cols:
         table.heading(col, text=col)
-    table.bind('<Double-Button-1>', choose_data)
-    rows = engine.get_data()
-    for i, (country, code, region, keyword) in enumerate(rows):
+
+    def selectItem(a):
+        curItem = table.focus()
+        data.var1.set(table.item(curItem)["values"][0])
+        data.var2.set(table.item(curItem)["values"][1])
+        data.var3.set(table.item(curItem)["values"][2])
+        data.var4.set(table.item(curItem)["values"][3])
+    table.bind('<Double-Button-1>', selectItem)
+
+    rows = data.get_data()
+    for i, (country, code, region, keyword) in enumerate(rows, start=1):
         table.insert("", "end", values=(country, code, region, keyword))
     
+    
+
     label1.place(x=40, y=20), entry1.place(x=150, y=20)
     label2.place(x=40, y=60), entry2.place(x=150, y=60)
     label3.place(x=40, y=100), entry3.place(x=150, y=100)
