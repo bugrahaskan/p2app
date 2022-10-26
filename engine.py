@@ -10,15 +10,6 @@ class Data(tk.Tk):
         self.database = sqlite3.connect(self.path)
         self.var = [tk.StringVar() for i in range(5)]
 
-    # @staticmethod
-    # def connection_decorator(func):
-    #     def connection(self):
-    #         self.database = sqlite3.connect(self.path)
-    #         func()
-    #         self.database.close()
-    #     return connection
-
-    # @connection_decorator
     def get_data(self):
         self.database = sqlite3.connect(self.path)
         _db = self.database.cursor()
