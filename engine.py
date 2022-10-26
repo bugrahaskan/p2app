@@ -17,9 +17,11 @@ class Data(tk.Tk):
         _db = self.database.cursor()
         _db.execute("SELECT country.name, country.country_code, region.name, \
                     region.keywords FROM country INNER JOIN region \
-                    ON country.country_id = region.country_id")
+                    ON country.country_id = region.country_id \
+                    ORDER BY country.name")
         rows = _db.fetchall()
-        _db.close()
+        #_db.close()
+        self.database.close()
 
         return rows
 
