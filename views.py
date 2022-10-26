@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import ttk
+from tkinter import SINGLE, ttk
 import engine
 from engine import Data
 from tkinter import messagebox
@@ -43,7 +43,7 @@ def views():
 
         top_list_label = tk.Label(top, text="Choose criteria:")
 
-        top_list = tk.Listbox(top)
+        top_list = tk.Listbox(top, selectmode=SINGLE)
         top_list.insert(1, "Country Name")
         top_list.insert(2, "Country Code")
         top_list.insert(3, "Continent")
@@ -54,13 +54,30 @@ def views():
         top_entry = tk.Entry(top, textvariable=top_data.var[0])
 
         def top_search():
+            children = top_table.get_children()
+            if children:
+                for child in children:
+                    top_table.delete(child)
+
+            if top_list.curselection()[0] == 0:
+                sub_query = "country.name"
+            elif top_list.curselection()[0] == 1:
+                sub_query = "country.country_code"
+            elif top_list.curselection()[0] == 2:
+                sub_query = "continent.name"
+            elif top_list.curselection()[0] == 3:
+                sub_query = "airport.name"
+            elif top_list.curselection()[0] == 4:
+                sub_query = "region_name"
+
             query = 'SELECT country.name, country.country_code, continent.name, airport.name, region.name \
                     FROM airport \
                     INNER JOIN country ON airport.country_id = country.country_id \
                     INNER JOIN region ON airport.region_id = region.region_id \
                     INNER JOIN continent ON airport.continent_id = continent.continent_id \
-                    WHERE country.name = "Turkey" \
-                    ORDER BY country.name'
+                    WHERE {} = "{}" \
+                    ORDER BY country.name'.format(sub_query, top_data.var[0].get())
+                    
             top_rows = top_data.search_data(query) # query
             for i, (country, code, continent, airport, region) in enumerate(top_rows, start=1):
                 top_table.insert("", "end", values=(i, country, code, continent, airport, region))
@@ -75,16 +92,12 @@ def views():
         for col in cols:
             top_table.heading(col, text=col)
 
-
         top_list_label.place(x=30, y=10), top_list.place(x=30, y=30)
         top_label.place(x=250, y=30), top_entry.place(x=250, y=70)
         top_button.place(x=250, y=110)
         top_table.place(x=10, y=250)
         top.mainloop()
-            
-            
-        
-
+    
     button1 = tk.Button(frame1, text="Add", width=5, command=data.insert_data)
     button2 = tk.Button(frame1, text="Update", width=5, command=data.update_data)
     button3 = tk.Button(frame1, text="Delete", width=5, command=data.del_data)
