@@ -53,7 +53,19 @@ def views():
         top_label = tk.Label(top, text="Selected:")
         top_entry = tk.Entry(top, textvariable=top_data.var[0])
 
-        top_button = tk.Button(top, text="Search")
+        def top_search():
+            query = 'SELECT country.name, country.country_code, continent.name, airport.name, region.name \
+                    FROM airport \
+                    INNER JOIN country ON airport.country_id = country.country_id \
+                    INNER JOIN region ON airport.region_id = region.region_id \
+                    INNER JOIN continent ON airport.continent_id = continent.continent_id \
+                    WHERE country.name = "Turkey" \
+                    ORDER BY country.name'
+            top_rows = top_data.search_data(query) # query
+            for i, (country, code, continent, airport, region) in enumerate(top_rows, start=1):
+                top_table.insert("", "end", values=(i, country, code, continent, airport, region))
+
+        top_button = tk.Button(top, text="Search", command=top_search)
 
         cols = ('ID', 'Country Name', 'Code', 'Continent', 'Airport Name', 'Region Name')
         top_table = ttk.Treeview(top, columns=cols, show='headings')
@@ -62,6 +74,7 @@ def views():
         top_table.column("Continent", width=100)
         for col in cols:
             top_table.heading(col, text=col)
+
 
         top_list_label.place(x=30, y=10), top_list.place(x=30, y=30)
         top_label.place(x=250, y=30), top_entry.place(x=250, y=70)
@@ -79,7 +92,7 @@ def views():
     button5 = tk.Button(frame1, text="Advanced Search", command=advanced_search)
 
     cols = ('ID', 'Country Name', 'Code', 'Continent', 'Airport Name', 'Region Name')
-    table = ttk.Treeview(window, columns=cols, show='headings')
+    table = ttk.Treeview(window, columns=cols, show='headings', height=19)
     table.column("ID", width=50)
     table.column("Code", width=50)
     table.column("Continent", width=100)

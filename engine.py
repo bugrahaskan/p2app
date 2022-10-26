@@ -22,14 +22,18 @@ class Data(tk.Tk):
     def get_data(self):
         self.database = sqlite3.connect(self.path)
         _db = self.database.cursor()
-        _db.execute("SELECT country.name, country.country_code, continent.name, airport.name, region.name \
+        try:
+            _db.execute("SELECT country.name, country.country_code, continent.name, airport.name, region.name \
                     FROM airport \
                     INNER JOIN country ON airport.country_id = country.country_id \
                     INNER JOIN region ON airport.region_id = region.region_id \
                     INNER JOIN continent ON airport.continent_id = continent.continent_id \
                     ORDER BY country.name")
-        rows = _db.fetchall()
-        self.database.close()
+            rows = _db.fetchall()
+        except Exception as e:
+            print(e)
+        finally:
+            self.database.close()
 
         return rows
 
@@ -81,12 +85,17 @@ class Data(tk.Tk):
                 self.var[i].set("")
             self.database.close()
 
-    def search_data(self):
+    def search_data(self, query):
         self.database = sqlite3.connect(self.path)
+        _db = self.database.cursor()
         try:
             # SQL Query
+            _db.execute(query)
+            rows = _db.fetchall()
             messagebox.showinfo("title", "Search Query")
         except Exception as e:
             print(e)
         finally:
             self.database.close()
+        
+        return rows
