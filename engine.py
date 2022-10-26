@@ -8,11 +8,7 @@ class Data(tk.Tk):
     def __init__(self):
         self.path = Path(Path.cwd(),"UPWORK","p2app","p2app","airport.db")
         self.database = sqlite3.connect(self.path)
-        self.var1 = tk.StringVar()
-        self.var2 = tk.StringVar()
-        self.var3 = tk.StringVar()
-        self.var4 = tk.StringVar()
-        self.var5 = tk.StringVar()
+        self.var = [tk.StringVar() for i in range(5)]
 
     # @staticmethod
     # def connection_decorator(func):
@@ -40,58 +36,49 @@ class Data(tk.Tk):
     def del_data(self):
         self.database = sqlite3.connect(self.path)
         message='Following Record Deleted Succesfully: \
-                {}, {}, {}'.format(self.var1.get(),
-                                    self.var2.get(),
-                                    self.var3.get())
+                {}, {}, {}'.format(self.var[0].get(),
+                                    self.var[1].get(),
+                                    self.var[2].get())
         try:
             # SQL Query
             messagebox.showinfo("title", message)
         except Exception as e:
             print(e)
         finally:
-            self.var1.set("")
-            self.var2.set("")
-            self.var3.set("")
-            self.var4.set("")
-            self.var5.set("")
+            for i in range(5):
+                self.var[i].set("")
             self.database.close()
         
     def update_data(self):
         self.database = sqlite3.connect(self.path)
         message='Following Record Updated Succesfully: \
-                {}, {}, {}'.format(self.var1.get(),
-                                    self.var2.get(),
-                                    self.var3.get())
+                {}, {}, {}'.format(self.var[0].get(),
+                                    self.var[1].get(),
+                                    self.var[2].get())
         try:
             # SQL Query
             messagebox.showinfo("title", message)
         except Exception as e:
             print(e)
         finally:
-            self.var1.set("")
-            self.var2.set("")
-            self.var3.set("")
-            self.var4.set("")
-            self.var5.set("")
+            for i in range(5):
+                self.var[i].set("")
             self.database.close()
 
     def insert_data(self):
         self.database = sqlite3.connect(self.path)
         message='Following Record Added Succesfully: \
-                {}, {}, {}'.format(self.var1.get(),
-                                    self.var2.get(),
-                                    self.var3.get())
+                {}, {}, {}'.format(self.var[0].get(),
+                                    self.var[1].get(),
+                                    self.var[2].get())
         try:
             # SQL Query
             messagebox.showinfo("title", message)
         except Exception as e:
             print(e)
         finally:
-            self.var1.set("")
-            self.var2.set("")
-            self.var3.set("")
-            self.var4.set("")
-            self.var5.set("")
+            for i in range(5):
+                self.var[i].set("")
             self.database.close()
 
     def search_data(self):

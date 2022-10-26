@@ -11,28 +11,64 @@ def views():
 
     data = Data()
 
-    frame1 = tk.Frame(window, height=240, width=500)
+    frame1 = tk.Frame(window, height=240, width=550)
 
     label1 = tk.Label(frame1, text="Country Name:")
-    entry1 = tk.Entry(frame1, textvariable=data.var1)
+    entry1 = tk.Entry(frame1, textvariable=data.var[0])
     label2 = tk.Label(frame1, text="Country Code:")
-    entry2 = tk.Entry(frame1, textvariable=data.var2)
+    entry2 = tk.Entry(frame1, textvariable=data.var[1])
     label3 = tk.Label(frame1, text="Continent:")
-    entry3 = tk.Entry(frame1, textvariable=data.var3)
+    entry3 = tk.Entry(frame1, textvariable=data.var[2])
     label4 = tk.Label(frame1, text="Airport:")
-    entry4 = tk.Entry(frame1, textvariable=data.var4)
+    entry4 = tk.Entry(frame1, textvariable=data.var[3])
     label5 = tk.Label(frame1, text="Region Name:")
-    entry5 = tk.Entry(frame1, textvariable=data.var5)
+    entry5 = tk.Entry(frame1, textvariable=data.var[4])
     
     def search():
         for child in table.get_children():
-            if table.item(child)["values"][1] == data.var1.get():
+            if table.item(child)["values"][1] == data.var[0].get():
+                messagebox.showinfo("title", "Found the record")
                 table.focus(child)
                 table.see(child)
                 table.selection_set(child)
                 print(table.index(child)+1)
-                print(data.var1.get() in table.item(child)["values"])
+                print(data.var[0].get() in table.item(child)["values"])
                 break
+    
+    def advanced_search():
+        top = tk.Toplevel(window)
+        top.geometry("840x512")
+
+        top_data = Data()
+
+        top_list_label = tk.Label(top, text="Choose criteria:")
+
+        top_list = tk.Listbox(top)
+        top_list.insert(1, "Country Name")
+        top_list.insert(2, "Country Code")
+        top_list.insert(3, "Continent")
+        top_list.insert(4, "Airport")
+        top_list.insert(5, "Region")
+
+        top_label = tk.Label(top, text="Selected:")
+        top_entry = tk.Entry(top, textvariable=top_data.var[0])
+
+        top_button = tk.Button(top, text="Search")
+
+        cols = ('ID', 'Country Name', 'Code', 'Continent', 'Airport Name', 'Region Name')
+        top_table = ttk.Treeview(top, columns=cols, show='headings')
+        top_table.column("ID", width=50)
+        top_table.column("Code", width=50)
+        top_table.column("Continent", width=100)
+        for col in cols:
+            top_table.heading(col, text=col)
+
+        top_list_label.place(x=30, y=10), top_list.place(x=30, y=30)
+        top_label.place(x=250, y=30), top_entry.place(x=250, y=70)
+        top_button.place(x=250, y=110)
+        top_table.place(x=10, y=250)
+        top.mainloop()
+            
             
         
 
@@ -40,6 +76,7 @@ def views():
     button2 = tk.Button(frame1, text="Update", width=5, command=data.update_data)
     button3 = tk.Button(frame1, text="Delete", width=5, command=data.del_data)
     button4 = tk.Button(frame1, text="Search", width=5, command=search)
+    button5 = tk.Button(frame1, text="Advanced Search", command=advanced_search)
 
     cols = ('ID', 'Country Name', 'Code', 'Continent', 'Airport Name', 'Region Name')
     table = ttk.Treeview(window, columns=cols, show='headings')
@@ -51,11 +88,11 @@ def views():
 
     def selectItem(a):
         curItem = table.focus()
-        data.var1.set(table.item(curItem)["values"][1])
-        data.var2.set(table.item(curItem)["values"][2])
-        data.var3.set(table.item(curItem)["values"][3])
-        data.var4.set(table.item(curItem)["values"][4])
-        data.var5.set(table.item(curItem)["values"][5])
+        data.var[0].set(table.item(curItem)["values"][1])
+        data.var[1].set(table.item(curItem)["values"][2])
+        data.var[2].set(table.item(curItem)["values"][3])
+        data.var[3].set(table.item(curItem)["values"][4])
+        data.var[4].set(table.item(curItem)["values"][5])
     table.bind('<Double-Button-1>', selectItem)
 
     rows = data.get_data()
@@ -70,6 +107,7 @@ def views():
     label5.place(x=40, y=180), entry5.place(x=150, y=180)
     button1.place(x=400, y=40), button2.place(x=400, y=80)
     button3.place(x=400, y=120), button4.place(x=400, y=160)
+    button5.place(x=400, y=200)
     frame1.pack()
     table.pack()
     window.mainloop()
