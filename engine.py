@@ -1,12 +1,12 @@
 import sqlite3
+import os
 from pathlib import Path
 from tkinter import messagebox
-import views
 import tkinter as tk
 
 class Data(tk.Tk):
     def __init__(self):
-        self.path = Path(Path.cwd(),"UPWORK","p2app","p2app","airport.db")
+        self.path = Path(Path(os.path.abspath(__file__)).parent,"airport.db")
         self.database = sqlite3.connect(self.path)
         self.var = [tk.StringVar() for i in range(5)]
 
@@ -66,6 +66,7 @@ class Data(tk.Tk):
                 {}, {}, {}'.format(self.var[0].get(),
                                     self.var[1].get(),
                                     self.var[2].get())
+        _db = self.database.cursor()
         try:
             # SQL Query
             messagebox.showinfo("title", message)
@@ -83,9 +84,8 @@ class Data(tk.Tk):
             # SQL Query
             _db.execute(query)
             rows = _db.fetchall()
-            messagebox.showinfo("title", "Search Query")
         except Exception as e:
-            print(e)
+            messagebox.showerror("title", "Search Query failed")
         finally:
             self.database.close()
         

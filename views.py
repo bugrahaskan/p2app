@@ -1,6 +1,5 @@
 import tkinter as tk
 from tkinter import SINGLE, ttk
-import engine
 from engine import Data
 from tkinter import messagebox
 
@@ -24,6 +23,11 @@ def views():
     label5 = tk.Label(frame1, text="Region Name:")
     entry5 = tk.Entry(frame1, textvariable=data.var[4])
     
+    def test(*args):
+        print(data.var[0].get())
+    
+    entry1.bind('<KeyRelease>', test)
+
     def search():
         for child in table.get_children():
             if table.item(child)["values"][1] == data.var[0].get():
@@ -77,7 +81,7 @@ def views():
                     INNER JOIN continent ON airport.continent_id = continent.continent_id \
                     WHERE {} = "{}" \
                     ORDER BY country.name'.format(sub_query, top_data.var[0].get())
-                    
+
             top_rows = top_data.search_data(query) # query
             for i, (country, code, continent, airport, region) in enumerate(top_rows, start=1):
                 top_table.insert("", "end", values=(i, country, code, continent, airport, region))
